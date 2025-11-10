@@ -26,7 +26,8 @@ function createIndexFiles() {
   const defaultIndexPath = path.join(prismaClientPath, 'index.js');
   const defaultIndexContent = `// Prisma client index - use compiled CommonJS file
 // The client.js is compiled from client.ts using esbuild
-module.exports = require('./client.js');
+const client = require('./client.js');
+module.exports = client;
 `;
   
   try {
@@ -38,10 +39,22 @@ module.exports = require('./client.js');
   }
   
   // Create node_modules/@prisma/client/index.js
+  // Ensure we properly export PrismaClient
   const prismaClientIndexPath = path.join(prismaClientDir, 'index.js');
   const prismaClientIndexContent = `// Prisma Client re-export
 const prismaClient = require('.prisma/client/default');
-module.exports = prismaClient;
+// Ensure PrismaClient is properly exported
+if (prismaClient.PrismaClient) {
+  module.exports = prismaClient;
+} else if (prismaClient.default && prismaClient.default.PrismaClient) {
+  module.exports = prismaClient.default;
+} else {
+  // If PrismaClient is the default export
+  module.exports = {
+    PrismaClient: prismaClient,
+    ...prismaClient
+  };
+}
 `;
   
   try {
@@ -67,7 +80,7 @@ if (fs.existsSync(clientTsPath)) {
     // Create index files after successful compilation
     createIndexFiles();
     
-    // Verify PrismaClient can be imported
+    // Verify PrismaClient can be imported and initialized
     console.log('Verifying Prisma client can be imported...');
     try {
       // Clear require cache to ensure fresh import
@@ -84,9 +97,15 @@ if (fs.existsSync(clientTsPath)) {
       }
       
       // Try to import PrismaClient
-      const { PrismaClient } = require('@prisma/client');
-      if (PrismaClient) {
-        console.log('✓ PrismaClient verified and ready!');
+      const prismaModule = require('@prisma/client');
+      const PrismaClient = prismaModule.PrismaClient || prismaModule.default?.PrismaClient || prismaModule;
+      
+      if (PrismaClient && typeof PrismaClient === 'function') {
+        // Try to instantiate to ensure it's properly initialized
+        const testClient = new PrismaClient();
+        console.log('✓ PrismaClient verified and initialized!');
+        // Clean up test instance
+        testClient.$disconnect().catch(() => {});
       } else {
         throw new Error('PrismaClient not found in exports');
       }
