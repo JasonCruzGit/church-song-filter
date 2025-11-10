@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     // Check if artist is banned
     const bannedArtists = await prisma.bannedArtist.findMany()
     const isBanned = bannedArtists.some(
-      (b) => artist.toLowerCase().includes(b.artist_name.toLowerCase()) ||
+      (b: { artist_name: string }) => artist.toLowerCase().includes(b.artist_name.toLowerCase()) ||
              b.artist_name.toLowerCase().includes(artist.toLowerCase())
     )
 
