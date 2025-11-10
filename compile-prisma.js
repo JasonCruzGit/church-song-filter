@@ -1,7 +1,7 @@
 // Script to compile Prisma TypeScript files to JavaScript
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 
 const prismaClientPath = path.join(__dirname, 'node_modules', '.prisma', 'client', 'default');
 const clientTsPath = path.join(prismaClientPath, 'client.ts');
@@ -47,21 +47,20 @@ if (fs.existsSync(clientTsPath)) {
   const clientJsPath = path.join(prismaClientPath, 'client.js');
   const command = `npx esbuild ${clientTsPath} --bundle --platform=node --format=cjs --outfile=${clientJsPath}`;
   
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error('Error compiling Prisma client:', error);
-      return;
-    }
-    if (stderr) {
-      console.error('Stderr:', stderr);
-    }
+  try {
+    console.log('Compiling Prisma client...');
+    const stdout = execSync(command, { encoding: 'utf8', stdio: 'inherit' });
     console.log('Prisma client compiled successfully to CommonJS!');
-    console.log(stdout);
     
     // Create index files after successful compilation
     createIndexFiles();
-  });
+  } catch (error) {
+    console.error('Error compiling Prisma client:', error);
+    process.exit(1);
+  }
 } else {
   console.log('Prisma client TypeScript file not found.');
+  // Still create index files even if client.ts doesn't exist (might be using pre-compiled version)
+  createIndexFiles();
 }
 
