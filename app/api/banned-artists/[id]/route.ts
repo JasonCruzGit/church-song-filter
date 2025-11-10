@@ -38,7 +38,7 @@ export async function DELETE(
     
     for (const song of songs) {
       const isBanned = bannedArtists.some(
-        (b) => song.artist.toLowerCase().includes(b.artist_name.toLowerCase()) ||
+        (b: { artist_name: string }) => song.artist.toLowerCase().includes(b.artist_name.toLowerCase()) ||
                b.artist_name.toLowerCase().includes(song.artist.toLowerCase())
       )
 
