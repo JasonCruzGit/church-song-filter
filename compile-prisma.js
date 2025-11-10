@@ -8,53 +8,21 @@ const clientTsPath = path.join(prismaClientPath, 'client.ts');
 
 console.log('Compiling Prisma client TypeScript files to JavaScript (CommonJS)...');
 
-// Function to create index files
-function createIndexFiles() {
-  console.log('Creating Prisma client index files...');
-  
-  // Ensure directories exist
-  if (!fs.existsSync(prismaClientPath)) {
-    fs.mkdirSync(prismaClientPath, { recursive: true });
-  }
+// Function to create @prisma/client index file
+function createPrismaClientIndex() {
+  console.log('Creating @prisma/client index file...');
   
   const prismaClientDir = path.join(__dirname, 'node_modules', '@prisma', 'client');
   if (!fs.existsSync(prismaClientDir)) {
     fs.mkdirSync(prismaClientDir, { recursive: true });
   }
   
-  // Create node_modules/.prisma/client/default/index.js
-  const defaultIndexPath = path.join(prismaClientPath, 'index.js');
-  const defaultIndexContent = `// Prisma client index - use compiled CommonJS file
-// The client.js is compiled from client.ts using esbuild
-const client = require('./client.js');
-module.exports = client;
-`;
-  
-  try {
-    fs.writeFileSync(defaultIndexPath, defaultIndexContent);
-    console.log('✓ Created .prisma/client/default/index.js');
-  } catch (error) {
-    console.error('Error creating default index.js:', error);
-    throw error;
-  }
-  
   // Create node_modules/@prisma/client/index.js
-  // Ensure we properly export PrismaClient
+  // This file simply re-exports from the compiled default client
   const prismaClientIndexPath = path.join(prismaClientDir, 'index.js');
   const prismaClientIndexContent = `// Prisma Client re-export
-const prismaClient = require('.prisma/client/default');
-// Ensure PrismaClient is properly exported
-if (prismaClient.PrismaClient) {
-  module.exports = prismaClient;
-} else if (prismaClient.default && prismaClient.default.PrismaClient) {
-  module.exports = prismaClient.default;
-} else {
-  // If PrismaClient is the default export
-  module.exports = {
-    PrismaClient: prismaClient,
-    ...prismaClient
-  };
-}
+// Re-export everything from the compiled default client
+module.exports = require('.prisma/client/default');
 `;
   
   try {
@@ -110,8 +78,9 @@ if (fs.existsSync(clientTsPath)) {
     
     console.log('✓ Prisma client files compiled successfully!');
     
-    // Create index files after successful compilation
-    createIndexFiles();
+    // Create @prisma/client index file after successful compilation
+    // Note: index.js in .prisma/client/default is already compiled from index.ts
+    createPrismaClientIndex();
     
     console.log('✓ Prisma client setup complete!');
   } catch (error) {
@@ -120,6 +89,6 @@ if (fs.existsSync(clientTsPath)) {
   }
 } else {
   console.log('Prisma client TypeScript file not found.');
-  createIndexFiles();
+  createPrismaClientIndex();
 }
 
