@@ -57,13 +57,11 @@ node_modules/.prisma/client/default/index.js
 *_STEPS.md
 *_GUIDE.md
 *_FIX.md
-*_HERE.md
 *_HAPPENING.md
 *_ENV.md
 *_CONNECTION*.md
 UPDATE_*.md
 EASY_*.md
-START_*.md
 WHAT*.md
 SUCCESS*.md
 FINAL_*.md
@@ -72,3 +70,11 @@ ACCOMPLISHMENTS.md
 YOU_DID_IT.md
 COMPLETE.md
 QUICK_ADD_GUIDE.md
+
+# Keep deployment guides
+!DEPLOY_NOW.md
+!START_HERE_DEPLOY.md
+!DEPLOYMENT_READY.md
+!PUSH_TO_GITHUB.md
+!VERCEL_DEPLOY.md
+!DEPLOY.md
