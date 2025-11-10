@@ -9,7 +9,8 @@ export default function QuickAddBannedArtists() {
   const router = useRouter()
   const [authenticated, setAuthenticated] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [artistList, setArtistList] = useState('')
+  const [artist, setArtist] = useState('')
+  const [songTitles, setSongTitles] = useState('')
   const [reason, setReason] = useState('')
   const [result, setResult] = useState<{ success: boolean; message: string; count?: number; skipped?: number } | null>(null)
 
@@ -25,8 +26,13 @@ export default function QuickAddBannedArtists() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!artistList.trim()) {
-      setResult({ success: false, message: 'Artist list is required' })
+    if (!artist.trim()) {
+      setResult({ success: false, message: 'Artist is required' })
+      return
+    }
+
+    if (!songTitles.trim()) {
+      setResult({ success: false, message: 'Song titles are required' })
       return
     }
 
@@ -34,48 +40,73 @@ export default function QuickAddBannedArtists() {
     setResult(null)
 
     try {
-      // Parse artist list - one artist per line
-      const artists = artistList
+      // Parse song titles - one per line
+      const songs = songTitles
         .split('\n')
         .map(line => line.trim())
         .filter(line => line.length > 0)
 
-      if (artists.length === 0) {
-        setResult({ success: false, message: 'No valid artists found' })
+      if (songs.length === 0) {
+        setResult({ success: false, message: 'No valid song titles found' })
         setUploading(false)
         return
       }
 
-      // Upload artists
-      const response = await fetch('/api/banned-artists/bulk', {
+      // Add the artist to banned artists list first
+      const artistResponse = await fetch('/api/banned-artists', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          artists,
+          artist_name: artist.trim(),
           reason: reason.trim() || null,
         }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
+      if (!artistResponse.ok) {
+        const error = await artistResponse.json()
+        // If artist already exists, that's okay - continue
+        if (!error.error?.includes('already exists')) {
+          setResult({ success: false, message: error.error || 'Failed to add banned artist' })
+          setUploading(false)
+          return
+        }
+      }
+
+      // Upload songs with this artist
+      const songsToAdd = songs.map(title => ({
+        title: title.trim(),
+        artist: artist.trim(),
+        status: 'Not Allowed',
+      }))
+
+      const songsResponse = await fetch('/api/songs/bulk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ songs: songsToAdd }),
+      })
+
+      if (songsResponse.ok) {
+        const data = await songsResponse.json()
         setResult({
           success: true,
-          message: data.message || `Successfully added ${data.count} banned artist(s)`,
+          message: `Successfully added ${data.count} banned song(s) from ${artist.trim()}`,
           count: data.count,
-          skipped: data.skipped || 0,
         })
         // Clear form
-        setArtistList('')
+        setArtist('')
+        setSongTitles('')
         setReason('')
       } else {
-        const error = await response.json()
-        setResult({ success: false, message: error.error || 'Failed to add banned artists' })
+        const error = await songsResponse.json()
+        setResult({ success: false, message: error.error || 'Failed to add banned songs' })
       }
     } catch (error) {
-      console.error('Error adding banned artists:', error)
-      setResult({ success: false, message: 'Error adding banned artists' })
+      console.error('Error adding banned songs:', error)
+      setResult({ success: false, message: 'Error adding banned songs' })
     } finally {
       setUploading(false)
     }
@@ -99,10 +130,10 @@ export default function QuickAddBannedArtists() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Quick Add Banned Artists
+                Quick Add Banned Songs
               </h1>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Add multiple banned artists at once
+                Add multiple banned songs from the same artist at once
               </p>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
@@ -123,18 +154,35 @@ export default function QuickAddBannedArtists() {
           <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Artist Names (One per line) <span className="text-red-500">*</span>
+                Artist <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={artist}
+                onChange={(e) => setArtist(e.target.value)}
+                className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="e.g., Hillsong Worship, Bethel Music"
+                required
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                The artist will be added to the banned artists list if not already present.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Song Titles (One per line) <span className="text-red-500">*</span>
               </label>
               <textarea
-                value={artistList}
-                onChange={(e) => setArtistList(e.target.value)}
+                value={songTitles}
+                onChange={(e) => setSongTitles(e.target.value)}
                 rows={12}
                 className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono"
-                placeholder="Enter artist names, one per line:&#10;&#10;Hillsong Worship&#10;Bethel Music&#10;Elevation Worship&#10;Hillsong United&#10;..."
+                placeholder="Enter song titles, one per line:&#10;&#10;What a Beautiful Name&#10;Oceans&#10;Cornerstone&#10;..."
                 required
               />
               <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                Enter one artist name per line. Empty lines will be ignored. Duplicate artists will be skipped.
+                Enter one song title per line. Empty lines will be ignored.
               </p>
             </div>
 
@@ -150,7 +198,7 @@ export default function QuickAddBannedArtists() {
                 placeholder="e.g., Theological concerns, Association with problematic movements, etc."
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                This reason will be applied to all artists listed above.
+                This reason will be applied to the artist and all songs listed above.
               </p>
             </div>
 
@@ -180,7 +228,7 @@ export default function QuickAddBannedArtists() {
                 disabled={uploading}
                 className="px-6 py-2.5 text-base sm:text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
-                {uploading ? 'Adding Artists...' : 'Add All Artists'}
+                {uploading ? 'Adding Songs...' : 'Add All Songs'}
               </button>
               <Link
                 href="/admin/banned"
@@ -196,18 +244,18 @@ export default function QuickAddBannedArtists() {
               ⚠️ Example:
             </h3>
             <div className="text-sm text-red-800 dark:text-red-300 space-y-1">
-              <p><strong>Banned Artists:</strong></p>
+              <p><strong>Artist:</strong> Hillsong Worship</p>
+              <p className="mt-2"><strong>Song Titles:</strong></p>
               <pre className="mt-2 p-2 bg-white dark:bg-gray-800 rounded text-xs">
-{`Hillsong Worship
-Bethel Music
-Elevation Worship
-Hillsong United
-Bethel Music Worship
-Jesus Culture`}
+{`What a Beautiful Name
+Oceans
+Cornerstone
+Mighty to Save
+From the Inside Out`}
               </pre>
               <p className="mt-2"><strong>Reason:</strong> Theological concerns, Association with problematic movements</p>
               <p className="mt-2 text-xs">
-                Songs from these artists will automatically be marked as "Not Allowed"
+                The artist will be added to the banned list and all songs will be marked as "Not Allowed"
               </p>
             </div>
           </div>

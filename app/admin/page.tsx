@@ -215,7 +215,7 @@ export default function AdminDashboard() {
               href="/admin/banned/quick-add"
               className="px-4 sm:px-6 py-3 text-sm sm:text-base bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-center"
             >
-              Quick Add Banned Artists
+              Quick Add Banned Songs
             </Link>
           </div>
         </div>
