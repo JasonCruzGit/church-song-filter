@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         lyrics_link: lyrics_link || null,
         status: isBanned ? 'Not Allowed' : 'Allowed',
       }
-    }).filter(Boolean)
+    }).filter((song): song is NonNullable<typeof song> => song !== null)
 
     if (songData.length === 0) {
       return NextResponse.json(
