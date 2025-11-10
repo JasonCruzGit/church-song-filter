@@ -164,13 +164,20 @@ export default function BulkUpload() {
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Bulk Upload Songs
-              </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Upload multiple songs from CSV or Excel file
-              </p>
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo.jpg" 
+                alt="Living Word Worship Team Logo" 
+                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
+              />
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  Bulk Upload Songs
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Upload multiple songs from CSV or Excel file
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-4">
               <Link

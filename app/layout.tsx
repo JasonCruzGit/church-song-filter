@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Worship Music Library",
+  title: "Living Word Worship Team Worship Music Library",
   description: "Search, filter, and manage approved worship songs for your church",
+  icons: {
+    icon: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({
