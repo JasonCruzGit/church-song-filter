@@ -69,11 +69,14 @@ if (prismaClient.PrismaClient) {
 if (fs.existsSync(clientTsPath)) {
   // Use esbuild to compile TypeScript to CommonJS JavaScript
   // Use --keep-names to preserve function names for Prisma's internal checks
+  // Bundle everything to ensure all dependencies are included
   const clientJsPath = path.join(prismaClientPath, 'client.js');
+  // Bundle everything to ensure Prisma's initialization structure is preserved
+  // This ensures Prisma's initialization checks pass
   const command = `npx esbuild ${clientTsPath} --bundle --platform=node --format=cjs --keep-names --outfile=${clientJsPath}`;
   
   try {
-    console.log('Compiling Prisma client...');
+    console.log('Compiling Prisma client (preserving structure)...');
     const stdout = execSync(command, { encoding: 'utf8', stdio: 'inherit' });
     console.log('Prisma client compiled successfully to CommonJS!');
     
