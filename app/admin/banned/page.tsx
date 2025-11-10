@@ -116,19 +116,25 @@ export default function BannedArtists() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 Manage Banned Artists
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
                 Add or remove banned artists from the list
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <Link
+                href="/admin/banned/quick-add"
+                className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
+                Quick Add
+              </Link>
               <Link
                 href="/admin"
-                className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 ← Back to Dashboard
               </Link>
@@ -140,23 +146,23 @@ export default function BannedArtists() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Add Banned Artist */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Add Banned Artist
           </h2>
-          <form onSubmit={handleAdd} className="flex gap-4">
+          <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <input
               type="text"
               value={newArtist}
               onChange={(e) => setNewArtist(e.target.value)}
               placeholder="e.g., Hillsong Worship, Bethel Music"
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="flex-1 px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             />
             <button
               type="submit"
               disabled={adding}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 text-base sm:text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {adding ? 'Adding...' : 'Add'}
             </button>
