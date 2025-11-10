@@ -72,7 +72,7 @@ if (fs.existsSync(clientTsPath)) {
   // Bundle everything to ensure all dependencies are included
   const clientJsPath = path.join(prismaClientPath, 'client.js');
   // Bundle everything to ensure Prisma's initialization structure is preserved
-  // This ensures Prisma's initialization checks pass
+  // __dirname is automatically available in CommonJS format
   const command = `npx esbuild ${clientTsPath} --bundle --platform=node --format=cjs --keep-names --outfile=${clientJsPath}`;
   
   try {
