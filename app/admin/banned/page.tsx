@@ -9,6 +9,7 @@ import ConfirmModal from '@/components/ConfirmModal'
 interface BannedArtist {
   id: number
   artist_name: string
+  reason: string | null
 }
 
 export default function BannedArtists() {
@@ -17,6 +18,7 @@ export default function BannedArtists() {
   const [bannedArtists, setBannedArtists] = useState<BannedArtist[]>([])
   const [loading, setLoading] = useState(false)
   const [newArtist, setNewArtist] = useState('')
+  const [newReason, setNewReason] = useState('')
   const [adding, setAdding] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [artistToDelete, setArtistToDelete] = useState<BannedArtist | null>(null)
@@ -57,11 +59,15 @@ export default function BannedArtists() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ artist_name: newArtist.trim() }),
+        body: JSON.stringify({ 
+          artist_name: newArtist.trim(),
+          reason: newReason.trim() || null,
+        }),
       })
 
       if (response.ok) {
         setNewArtist('')
+        setNewReason('')
         fetchBannedArtists()
       } else {
         const error = await response.json()
@@ -150,22 +156,41 @@ export default function BannedArtists() {
           <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Add Banned Artist
           </h2>
-          <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <input
-              type="text"
-              value={newArtist}
-              onChange={(e) => setNewArtist(e.target.value)}
-              placeholder="e.g., Hillsong Worship, Bethel Music"
-              className="flex-1 px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            />
-            <button
-              type="submit"
-              disabled={adding}
-              className="px-6 py-2.5 text-base sm:text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
-            >
-              {adding ? 'Adding...' : 'Add'}
-            </button>
+          <form onSubmit={handleAdd} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Artist Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={newArtist}
+                onChange={(e) => setNewArtist(e.target.value)}
+                placeholder="e.g., Hillsong Worship, Bethel Music"
+                className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Reason Why It Is Not Allowed (Optional)
+              </label>
+              <textarea
+                value={newReason}
+                onChange={(e) => setNewReason(e.target.value)}
+                placeholder="e.g., Theological concerns, Association with problematic movements, etc."
+                rows={3}
+                className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <button
+                type="submit"
+                disabled={adding}
+                className="px-6 py-2.5 text-base sm:text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+              >
+                {adding ? 'Adding...' : 'Add'}
+              </button>
+            </div>
           </form>
           <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
             Songs from banned artists will automatically be marked as "Not Allowed"
@@ -189,37 +214,80 @@ export default function BannedArtists() {
               <p className="text-gray-600 dark:text-gray-400">No banned artists yet</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Artist Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {bannedArtists.map((artist) => (
-                    <tr key={artist.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        {artist.artist_name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        <button
-                          onClick={() => openDeleteModal(artist)}
-                          className="text-red-600 dark:text-red-400 hover:underline"
-                        >
-                          Remove
-                        </button>
-                      </td>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Artist Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Reason
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {bannedArtists.map((artist) => (
+                      <tr key={artist.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          {artist.artist_name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                          {artist.reason || <span className="text-gray-400 dark:text-gray-500 italic">No reason provided</span>}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <button
+                            onClick={() => openDeleteModal(artist)}
+                            className="text-red-600 dark:text-red-400 hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-4 p-4">
+                {bannedArtists.map((artist) => (
+                  <div
+                    key={artist.id}
+                    className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-2"
+                  >
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                        {artist.artist_name}
+                      </h3>
+                      {artist.reason && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          {artist.reason}
+                        </p>
+                      )}
+                      {!artist.reason && (
+                        <p className="text-sm text-gray-400 dark:text-gray-500 italic mt-1">
+                          No reason provided
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => openDeleteModal(artist)}
+                        className="text-sm text-red-600 dark:text-red-400 hover:underline font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </main>

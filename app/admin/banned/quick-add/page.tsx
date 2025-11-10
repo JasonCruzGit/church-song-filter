@@ -10,6 +10,7 @@ export default function QuickAddBannedArtists() {
   const [authenticated, setAuthenticated] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [artistList, setArtistList] = useState('')
+  const [reason, setReason] = useState('')
   const [result, setResult] = useState<{ success: boolean; message: string; count?: number; skipped?: number } | null>(null)
 
   useEffect(() => {
@@ -51,7 +52,10 @@ export default function QuickAddBannedArtists() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ artists }),
+        body: JSON.stringify({ 
+          artists,
+          reason: reason.trim() || null,
+        }),
       })
 
       if (response.ok) {
@@ -64,6 +68,7 @@ export default function QuickAddBannedArtists() {
         })
         // Clear form
         setArtistList('')
+        setReason('')
       } else {
         const error = await response.json()
         setResult({ success: false, message: error.error || 'Failed to add banned artists' })
@@ -123,13 +128,29 @@ export default function QuickAddBannedArtists() {
               <textarea
                 value={artistList}
                 onChange={(e) => setArtistList(e.target.value)}
-                rows={15}
+                rows={12}
                 className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono"
                 placeholder="Enter artist names, one per line:&#10;&#10;Hillsong Worship&#10;Bethel Music&#10;Elevation Worship&#10;Hillsong United&#10;..."
                 required
               />
               <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 Enter one artist name per line. Empty lines will be ignored. Duplicate artists will be skipped.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Reason Why It Is Not Allowed (Optional)
+              </label>
+              <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                rows={3}
+                className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                placeholder="e.g., Theological concerns, Association with problematic movements, etc."
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                This reason will be applied to all artists listed above.
               </p>
             </div>
 
@@ -184,6 +205,7 @@ Hillsong United
 Bethel Music Worship
 Jesus Culture`}
               </pre>
+              <p className="mt-2"><strong>Reason:</strong> Theological concerns, Association with problematic movements</p>
               <p className="mt-2 text-xs">
                 Songs from these artists will automatically be marked as "Not Allowed"
               </p>

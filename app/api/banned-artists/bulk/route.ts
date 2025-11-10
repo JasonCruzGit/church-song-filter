@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { artists } = body
+    const { artists, reason } = body
 
     if (!Array.isArray(artists) || artists.length === 0) {
       return NextResponse.json(
@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
       try {
         // Try to create the banned artist
         await prisma.bannedArtist.create({
-          data: { artist_name: trimmedName },
+          data: { 
+            artist_name: trimmedName,
+            reason: reason || null,
+          },
         })
 
         // Update all songs with this artist to "Not Allowed"

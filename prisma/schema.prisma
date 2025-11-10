@@ -27,4 +27,5 @@ model Song {
 model BannedArtist {
   id           Int      @id @default(autoincrement())
   artist_name  String   @unique
+  reason       String?
 }
