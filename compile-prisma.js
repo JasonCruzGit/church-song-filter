@@ -12,6 +12,16 @@ console.log('Compiling Prisma client TypeScript files to JavaScript (CommonJS)..
 function createIndexFiles() {
   console.log('Creating Prisma client index files...');
   
+  // Ensure directories exist
+  if (!fs.existsSync(prismaClientPath)) {
+    fs.mkdirSync(prismaClientPath, { recursive: true });
+  }
+  
+  const prismaClientDir = path.join(__dirname, 'node_modules', '@prisma', 'client');
+  if (!fs.existsSync(prismaClientDir)) {
+    fs.mkdirSync(prismaClientDir, { recursive: true });
+  }
+  
   // Create node_modules/.prisma/client/default/index.js
   const defaultIndexPath = path.join(prismaClientPath, 'index.js');
   const defaultIndexContent = `// Prisma client index - use compiled CommonJS file
@@ -24,14 +34,14 @@ module.exports = require('./client.js');
     console.log('✓ Created .prisma/client/default/index.js');
   } catch (error) {
     console.error('Error creating default index.js:', error);
+    throw error;
   }
   
   // Create node_modules/@prisma/client/index.js
-  const prismaClientIndexPath = path.join(__dirname, 'node_modules', '@prisma', 'client', 'index.js');
+  const prismaClientIndexPath = path.join(prismaClientDir, 'index.js');
   const prismaClientIndexContent = `// Prisma Client re-export
-module.exports = {
-  ...require('.prisma/client/default'),
-}
+const prismaClient = require('.prisma/client/default');
+module.exports = prismaClient;
 `;
   
   try {
@@ -39,6 +49,7 @@ module.exports = {
     console.log('✓ Created @prisma/client/index.js');
   } catch (error) {
     console.error('Error creating @prisma/client index.js:', error);
+    throw error;
   }
 }
 
