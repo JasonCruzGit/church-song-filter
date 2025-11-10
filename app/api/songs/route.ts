@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       where.category = category
     }
 
-    const [songs, total] = await Promise.all([
+    const [songs, total, bannedArtists] = await Promise.all([
       prisma.song.findMany({
         where,
         orderBy: { date_added: 'desc' },
@@ -37,10 +37,27 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.song.count({ where }),
+      prisma.bannedArtist.findMany(),
     ])
 
+    // Enrich songs with banned artist reason if applicable
+    const enrichedSongs = songs.map((song) => {
+      if (song.status === 'Not Allowed') {
+        // Find matching banned artist
+        const bannedArtist = bannedArtists.find((b) =>
+          song.artist.toLowerCase().includes(b.artist_name.toLowerCase()) ||
+          b.artist_name.toLowerCase().includes(song.artist.toLowerCase())
+        )
+        return {
+          ...song,
+          bannedReason: bannedArtist?.reason || null,
+        }
+      }
+      return song
+    })
+
     return NextResponse.json({
-      songs,
+      songs: enrichedSongs,
       pagination: {
         page,
         limit,

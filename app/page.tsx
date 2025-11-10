@@ -13,6 +13,7 @@ interface Song {
   lyrics_link: string | null
   status: string
   date_added: string
+  bannedReason?: string | null
 }
 
 interface Pagination {
@@ -39,20 +40,20 @@ export default function Home() {
     setLoading(true)
     try {
       const params = new URLSearchParams({
-        status: 'Allowed',
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
       })
 
       if (search) params.append('search', search)
       if (category) params.append('category', category)
+      // Don't filter by status - show all songs including banned ones
 
       const response = await fetch(`/api/songs?${params}`)
       const data = await response.json()
       setSongs(data.songs || [])
       setPagination(data.pagination || pagination)
 
-      // Extract unique categories
+      // Extract unique categories from all songs
       const uniqueCategories = Array.from(
         new Set(data.songs?.map((s: Song) => s.category).filter(Boolean) || [])
       ) as string[]
@@ -84,7 +85,7 @@ export default function Home() {
                 Church Song Filter
               </h1>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Search and filter allowed songs
+                Search and filter songs (banned songs will be marked)
               </p>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
@@ -165,13 +166,21 @@ export default function Home() {
                         Category
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Lyrics
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {songs.map((song) => (
-                      <tr key={song.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <tr 
+                        key={song.id} 
+                        className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                          song.status === 'Not Allowed' ? 'bg-red-50 dark:bg-red-900/10' : ''
+                        }`}
+                      >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                           {song.title}
                         </td>
@@ -180,6 +189,24 @@ export default function Home() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                           {song.category || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {song.status === 'Not Allowed' ? (
+                            <div className="space-y-1">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">
+                                ⚠️ Not Allowed
+                              </span>
+                              {song.bannedReason && (
+                                <p className="text-xs text-red-600 dark:text-red-400 mt-1 max-w-xs">
+                                  {song.bannedReason}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
+                              ✓ Allowed
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                           {song.lyrics_link ? (
@@ -207,20 +234,41 @@ export default function Home() {
               {songs.map((song) => (
                 <div
                   key={song.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-2"
+                  className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-2 ${
+                    song.status === 'Not Allowed' ? 'border-l-4 border-red-500' : ''
+                  }`}
                 >
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-                      {song.title}
-                    </h3>
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                        {song.title}
+                      </h3>
+                      {song.status === 'Not Allowed' && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200 whitespace-nowrap">
+                          ⚠️ Not Allowed
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {song.artist}
                     </p>
+                    {song.status === 'Not Allowed' && song.bannedReason && (
+                      <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+                        <p className="text-xs text-red-800 dark:text-red-200 font-medium">
+                          Reason: {song.bannedReason}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-3 text-sm">
                     {song.category && (
                       <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
                         {song.category}
+                      </span>
+                    )}
+                    {song.status === 'Allowed' && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded text-xs font-medium">
+                        ✓ Allowed
                       </span>
                     )}
                     {song.lyrics_link && (
