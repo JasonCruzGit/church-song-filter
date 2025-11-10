@@ -55,8 +55,9 @@ module.exports = prismaClient;
 
 if (fs.existsSync(clientTsPath)) {
   // Use esbuild to compile TypeScript to CommonJS JavaScript
+  // Use --keep-names to preserve function names for Prisma's internal checks
   const clientJsPath = path.join(prismaClientPath, 'client.js');
-  const command = `npx esbuild ${clientTsPath} --bundle --platform=node --format=cjs --outfile=${clientJsPath}`;
+  const command = `npx esbuild ${clientTsPath} --bundle --platform=node --format=cjs --keep-names --outfile=${clientJsPath}`;
   
   try {
     console.log('Compiling Prisma client...');
@@ -65,6 +66,34 @@ if (fs.existsSync(clientTsPath)) {
     
     // Create index files after successful compilation
     createIndexFiles();
+    
+    // Verify PrismaClient can be imported
+    console.log('Verifying Prisma client can be imported...');
+    try {
+      // Clear require cache to ensure fresh import
+      const prismaClientIndexPath = path.join(__dirname, 'node_modules', '@prisma', 'client', 'index.js');
+      if (require.cache[prismaClientIndexPath]) {
+        delete require.cache[prismaClientIndexPath];
+      }
+      const defaultIndexPath = path.join(prismaClientPath, 'index.js');
+      if (require.cache[defaultIndexPath]) {
+        delete require.cache[defaultIndexPath];
+      }
+      if (require.cache[clientJsPath]) {
+        delete require.cache[clientJsPath];
+      }
+      
+      // Try to import PrismaClient
+      const { PrismaClient } = require('@prisma/client');
+      if (PrismaClient) {
+        console.log('✓ PrismaClient verified and ready!');
+      } else {
+        throw new Error('PrismaClient not found in exports');
+      }
+    } catch (verifyError) {
+      console.error('Warning: Could not verify PrismaClient import:', verifyError.message);
+      // Don't fail the build, but log the warning
+    }
   } catch (error) {
     console.error('Error compiling Prisma client:', error);
     process.exit(1);
