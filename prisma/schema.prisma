@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../node_modules/.prisma/client/default"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Song {
+  id          Int      @id @default(autoincrement())
+  title       String
+  artist      String
+  album       String?
+  category    String?
+  lyrics_link String?
+  status      String   @default("Allowed")
+  date_added  DateTime @default(now())
+}
+
+model BannedArtist {
+  id           Int      @id @default(autoincrement())
+  artist_name  String   @unique
+}
