@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Church Song Filter System",
-  description: "Search, filter, and manage songs allowed in church",
+  title: "Worship Music Library",
+  description: "Search, filter, and manage approved worship songs for your church",
 };
 
 export default function RootLayout({
