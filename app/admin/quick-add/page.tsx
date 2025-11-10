@@ -97,7 +97,7 @@ export default function QuickAdd() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <img 
-                src="/logo.jpg" 
+                src="/logo.png" 
                 alt="Living Word Worship Team Logo" 
                 className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
               />

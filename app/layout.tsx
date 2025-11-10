@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   title: "Living Word Worship Team Worship Music Library",
   description: "Search, filter, and manage approved worship songs for your church",
   icons: {
-    icon: '/logo.jpg',
-    apple: '/logo.jpg',
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

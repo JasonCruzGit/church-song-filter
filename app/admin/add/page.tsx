@@ -139,7 +139,7 @@ function AddSongContent() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center gap-3">
               <img 
-                src="/logo.jpg" 
+                src="/logo.png" 
                 alt="Living Word Worship Team Logo" 
                 className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
               />
