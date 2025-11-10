@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import ThemeToggle from '@/components/ThemeToggle'
 import Link from 'next/link'
@@ -16,7 +16,7 @@ interface Song {
   status: string
 }
 
-export default function AddSong() {
+function AddSongContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const songId = searchParams.get('id')
@@ -259,6 +259,21 @@ export default function AddSong() {
         confirmText="Delete"
       />
     </div>
+  )
+}
+
+export default function AddSong() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <AddSongContent />
+    </Suspense>
   )
 }
 
