@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import ThemeToggle from '@/components/ThemeToggle'
+import Header from '@/components/Header'
 import Link from 'next/link'
 import YouTubeIcon from '@/components/YouTubeIcon'
 
@@ -101,36 +101,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <img 
-                src="/logo.png" 
-                alt="Living Word Worship Team Logo" 
-                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
-              />
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                  Living Word Worship Team
-          </h1>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Worship Music Library
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <Link
-                href="/admin"
-                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                Admin
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        showAdminLink={true}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filter */}

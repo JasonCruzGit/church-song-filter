@@ -3,7 +3,11 @@
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
-export default function ThemeToggle() {
+interface ThemeToggleProps {
+  variant?: 'header' | 'default'
+}
+
+export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -13,7 +17,7 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-lg border border-gray-300 dark:border-gray-600">
+      <button className={`p-2 rounded-lg ${variant === 'header' ? 'border border-white/20' : 'border border-gray-300 dark:border-gray-600'}`}>
         <div className="w-5 h-5" />
       </button>
     )
@@ -23,10 +27,13 @@ export default function ThemeToggle() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
+  const headerClasses = "p-2.5 rounded-lg bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border border-white/20 hover:border-white/30 text-white transition-all duration-200 backdrop-blur-sm shadow-md hover:shadow-lg"
+  const defaultClasses = "p-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
+
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      className={variant === 'header' ? headerClasses : defaultClasses}
       aria-label="Toggle theme"
     >
       {theme === 'light' ? (

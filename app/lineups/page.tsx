@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import ThemeToggle from '@/components/ThemeToggle'
+import Header from '@/components/Header'
 import Link from 'next/link'
 import ConfirmModal from '@/components/ConfirmModal'
 
@@ -80,42 +80,20 @@ export default function LineupsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <img 
-                src="/logo.png" 
-                alt="Living Word Worship Team Logo" 
-                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
-              />
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                  Worship Lineups
-                </h1>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Create and manage worship service lineups
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <Link
-                href="/lineups/new"
-                className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                + New Lineup
-              </Link>
-              <Link
-                href="/"
-                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                ← Back to Home
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        title="Worship Lineups"
+        subtitle="Create and manage worship service lineups"
+        showHomeLink={true}
+        actionButton={{
+          label: "+ New Lineup",
+          href: "/lineups/new",
+          icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          )
+        }}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (

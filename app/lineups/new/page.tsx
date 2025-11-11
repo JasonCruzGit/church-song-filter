@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import ThemeToggle from '@/components/ThemeToggle'
+import Header from '@/components/Header'
 import Link from 'next/link'
 
 interface Song {
@@ -153,36 +153,20 @@ function NewLineupContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <img 
-                src="/logo.png" 
-                alt="Living Word Worship Team Logo" 
-                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg object-cover"
-              />
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                  {lineupId ? 'Edit Worship Lineup' : 'Create Worship Lineup'}
-                </h1>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Select songs and arrange them in order
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <Link
-                href="/lineups"
-                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                ← Back to Lineups
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        title={lineupId ? 'Edit Worship Lineup' : 'Create Worship Lineup'}
+        subtitle="Select songs and arrange them in order"
+        showHomeLink={true}
+        actionButton={{
+          label: "← Back to Lineups",
+          href: "/lineups",
+          icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          )
+        }}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit} className="space-y-6">
