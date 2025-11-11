@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
+import ThemeToggle from '@/components/ThemeToggle'
 import Link from 'next/link'
 import ConfirmModal from '@/components/ConfirmModal'
 
