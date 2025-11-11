@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import Link from 'next/link'
+import YouTubeIcon from '@/components/YouTubeIcon'
 
 interface Song {
   id: number
@@ -112,7 +113,7 @@ export default function Home() {
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   Living Word Worship Team
-                </h1>
+          </h1>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
                   Worship Music Library
                 </p>
@@ -288,9 +289,10 @@ export default function Home() {
                                 href={song.youtube_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-red-600 dark:text-red-400 hover:underline"
+                                className="text-red-600 dark:text-red-400 hover:opacity-80 transition-opacity"
+                                title="Watch on YouTube"
                               >
-                                YouTube
+                                <YouTubeIcon className="w-5 h-5" />
                               </a>
                             )}
                             {!song.lyrics_link && !song.youtube_link && (
@@ -332,8 +334,8 @@ export default function Home() {
                       <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
                         <p className="text-xs text-red-800 dark:text-red-200 font-medium">
                           Reason: {song.bannedReason}
-                        </p>
-                      </div>
+          </p>
+        </div>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2 text-sm">
@@ -365,8 +367,8 @@ export default function Home() {
                         {song.lyrics_link && (
                           <a
                             href={song.lyrics_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                             className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                           >
                             Lyrics
@@ -375,8 +377,8 @@ export default function Home() {
                         {song.youtube_link && (
                           <a
                             href={song.youtube_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                             className="text-red-600 dark:text-red-400 hover:underline font-medium"
                           >
                             YouTube
@@ -415,7 +417,7 @@ export default function Home() {
                 >
                   Next
                 </button>
-              </div>
+        </div>
             )}
           </>
         )}

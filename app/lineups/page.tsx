@@ -27,17 +27,14 @@ interface WorshipLineup {
 
 export default function LineupsPage() {
   const router = useRouter()
-  const [authenticated, setAuthenticated] = useState(false)
   const [lineups, setLineups] = useState<WorshipLineup[]>([])
   const [loading, setLoading] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [lineupToDelete, setLineupToDelete] = useState<WorshipLineup | null>(null)
 
   useEffect(() => {
-    // Lineups are now public - no authentication required
-    setAuthenticated(true)
     fetchLineups()
-  }, [router])
+  }, [])
 
   const fetchLineups = async () => {
     setLoading(true)
@@ -81,17 +78,6 @@ export default function LineupsPage() {
     setShowDeleteModal(true)
   }
 
-  if (!authenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -114,16 +100,16 @@ export default function LineupsPage() {
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
               <Link
-                href="/admin/lineups/new"
+                href="/lineups/new"
                 className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 + New Lineup
               </Link>
               <Link
-                href="/admin"
+                href="/"
                 className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
-                ← Back to Dashboard
+                ← Back to Home
               </Link>
               <ThemeToggle />
             </div>
@@ -141,7 +127,7 @@ export default function LineupsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-4">No lineups created yet</p>
             <Link
-              href="/admin/lineups/new"
+              href="/lineups/new"
               className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               Create Your First Lineup
@@ -196,8 +182,14 @@ export default function LineupsPage() {
 
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <Link
-                    href={`/admin/lineups/new?id=${lineup.id}`}
+                    href={`/lineups/${lineup.id}`}
                     className="flex-1 text-center px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    href={`/lineups/new?id=${lineup.id}`}
+                    className="flex-1 text-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     Edit
                   </Link>

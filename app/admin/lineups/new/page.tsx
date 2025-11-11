@@ -31,11 +31,7 @@ function NewLineupContent() {
   const [filteredSongs, setFilteredSongs] = useState<Song[]>([])
 
   useEffect(() => {
-    const auth = localStorage.getItem('admin_authenticated')
-    if (auth !== 'true') {
-      router.push('/admin')
-      return
-    }
+    // Lineups are now public - no authentication required
     setAuthenticated(true)
     fetchSongs()
 
@@ -46,9 +42,7 @@ function NewLineupContent() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch('/api/songs?limit=1000', {
-        credentials: 'include', // Include cookies
-      })
+      const response = await fetch('/api/songs?limit=1000')
       const data = await response.json()
       setAvailableSongs(data.songs || [])
       setFilteredSongs(data.songs || [])
@@ -60,12 +54,7 @@ function NewLineupContent() {
   const fetchLineup = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/lineups/${lineupId}`, {
-        headers: {
-          'x-admin-authenticated': 'true', // Add admin authentication header
-        },
-        credentials: 'include', // Include cookies
-      })
+      const response = await fetch(`/api/lineups/${lineupId}`)
       if (response.ok) {
         const lineup = await response.json()
         setFormData({
@@ -131,9 +120,7 @@ function NewLineupContent() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-authenticated': 'true', // Add admin authentication header
         },
-        credentials: 'include', // Include cookies
         body: JSON.stringify({
           name: formData.name,
           description: formData.description || null,
@@ -156,7 +143,7 @@ function NewLineupContent() {
     }
   }
 
-  if (!authenticated || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
