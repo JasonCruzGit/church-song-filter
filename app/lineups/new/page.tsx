@@ -17,7 +17,6 @@ function NewLineupContent() {
   const searchParams = useSearchParams()
   const lineupId = searchParams.get('id')
 
-  const [authenticated, setAuthenticated] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
@@ -31,14 +30,12 @@ function NewLineupContent() {
   const [filteredSongs, setFilteredSongs] = useState<Song[]>([])
 
   useEffect(() => {
-    // Lineups are now public - no authentication required
-    setAuthenticated(true)
     fetchSongs()
 
     if (lineupId) {
       fetchLineup()
     }
-  }, [lineupId, router])
+  }, [lineupId])
 
   const fetchSongs = async () => {
     try {
@@ -176,7 +173,7 @@ function NewLineupContent() {
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
               <Link
-                href="/admin/lineups"
+                href="/lineups"
                 className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 ← Back to Lineups

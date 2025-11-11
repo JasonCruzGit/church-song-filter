@@ -377,11 +377,13 @@ export default function Home() {
                         {song.youtube_link && (
                           <a
                             href={song.youtube_link}
-            target="_blank"
-            rel="noopener noreferrer"
-                            className="text-red-600 dark:text-red-400 hover:underline font-medium"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-red-600 dark:text-red-400 hover:opacity-80 transition-opacity inline-flex items-center gap-1"
+                            title="Watch on YouTube"
                           >
-                            YouTube
+                            <YouTubeIcon className="w-4 h-4" />
+                            <span className="text-xs">YouTube</span>
                           </a>
                         )}
                   </div>
