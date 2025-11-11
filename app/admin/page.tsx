@@ -13,6 +13,7 @@ interface Song {
   album: string | null
   category: string | null
   lyrics_link: string | null
+  youtube_link: string | null
   musical_key: string | null
   tempo_bpm: number | null
   time_signature: string | null
@@ -295,7 +296,7 @@ export default function AdminDashboard() {
           <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
             <Link
               href="/admin/add"
               className="px-4 sm:px-6 py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center"
@@ -325,6 +326,12 @@ export default function AdminDashboard() {
               className="px-4 sm:px-6 py-3 text-sm sm:text-base bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-center"
             >
               Quick Add Banned Songs
+            </Link>
+            <Link
+              href="/admin/lineups"
+              className="px-4 sm:px-6 py-3 text-sm sm:text-base bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-center"
+            >
+              Worship Lineups
             </Link>
           </div>
         </div>

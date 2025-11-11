@@ -11,6 +11,7 @@ interface Song {
   album: string | null
   category: string | null
   lyrics_link: string | null
+  youtube_link: string | null
   musical_key: string | null
   tempo_bpm: number | null
   time_signature: string | null
@@ -271,18 +272,31 @@ export default function Home() {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {song.lyrics_link ? (
-                            <a
-                              href={song.lyrics_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 dark:text-blue-400 hover:underline"
-                            >
-                              View
-                            </a>
-                          ) : (
-                            '-'
-                          )}
+                          <div className="flex flex-col gap-1">
+                            {song.lyrics_link && (
+                              <a
+                                href={song.lyrics_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                              >
+                                Lyrics
+                              </a>
+                            )}
+                            {song.youtube_link && (
+                              <a
+                                href={song.youtube_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-red-600 dark:text-red-400 hover:underline"
+                              >
+                                YouTube
+                              </a>
+                            )}
+                            {!song.lyrics_link && !song.youtube_link && (
+                              <span className="text-gray-400 dark:text-gray-500">-</span>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -348,16 +362,26 @@ export default function Home() {
                         ✓ Allowed
                       </span>
                     )}
-                    {song.lyrics_link && (
-                      <a
-                        href={song.lyrics_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                      >
-                        View Lyrics
-                      </a>
-                    )}
+                        {song.lyrics_link && (
+                          <a
+                            href={song.lyrics_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                          >
+                            Lyrics
+                          </a>
+                        )}
+                        {song.youtube_link && (
+                          <a
+                            href={song.youtube_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-red-600 dark:text-red-400 hover:underline font-medium"
+                          >
+                            YouTube
+                          </a>
+                        )}
                   </div>
                 </div>
               ))}

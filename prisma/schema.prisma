@@ -20,15 +20,41 @@ model Song {
   album          String?
   category       String?
   lyrics_link    String?
+  youtube_link   String?  // YouTube video URL
   musical_key    String?  // e.g., "C", "D", "E", "F", "G", "A", "B", "C#", "Db", etc.
   tempo_bpm      Int?     // Beats per minute
   time_signature String?  // e.g., "4/4", "3/4", "6/8", etc.
   status         String   @default("Allowed")
   date_added     DateTime @default(now())
+  lineups        LineupSong[] // Songs can be in multiple lineups
 }
 
 model BannedArtist {
   id           Int      @id @default(autoincrement())
   artist_name  String   @unique
   reason       String?
+}
+
+model WorshipLineup {
+  id          Int          @id @default(autoincrement())
+  name        String       // e.g., "Sunday Morning - January 15, 2024"
+  description String?      // Optional description
+  date        DateTime?    // Date for the worship service
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  songs       LineupSong[] // Songs in this lineup
+}
+
+model LineupSong {
+  id              Int           @id @default(autoincrement())
+  lineup_id       Int
+  song_id         Int
+  order           Int           @default(0) // Order of song in lineup
+  lineup          WorshipLineup @relation(fields: [lineup_id], references: [id], onDelete: Cascade)
+  song            Song          @relation(fields: [song_id], references: [id], onDelete: Cascade)
+  created_at      DateTime      @default(now())
+
+  @@unique([lineup_id, song_id]) // Prevent duplicate songs in same lineup
+  @@index([lineup_id])
+  @@index([song_id])
 }
