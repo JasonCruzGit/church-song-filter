@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { isAdminAuthenticated, getUnauthorizedResponse } from '@/lib/auth'
 
 // GET /api/lineups - Get all worship lineups
 export async function GET(request: NextRequest) {
+  // Check admin authentication
+  const isAdmin = await isAdminAuthenticated(request)
+  if (!isAdmin) {
+    return getUnauthorizedResponse()
+  }
+
   try {
     const lineups = await prisma.worshipLineup.findMany({
       include: {
@@ -32,6 +39,12 @@ export async function GET(request: NextRequest) {
 
 // POST /api/lineups - Create a new worship lineup
 export async function POST(request: NextRequest) {
+  // Check admin authentication
+  const isAdmin = await isAdminAuthenticated(request)
+  if (!isAdmin) {
+    return getUnauthorizedResponse()
+  }
+
   try {
     const body = await request.json()
     const { name, description, date, songIds } = body

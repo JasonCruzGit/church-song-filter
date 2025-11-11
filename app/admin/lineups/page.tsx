@@ -46,7 +46,12 @@ export default function LineupsPage() {
   const fetchLineups = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/lineups')
+      const response = await fetch('/api/lineups', {
+        headers: {
+          'x-admin-authenticated': 'true', // Add admin authentication header
+        },
+        credentials: 'include', // Include cookies
+      })
       if (response.ok) {
         const data = await response.json()
         setLineups(data)
@@ -64,6 +69,10 @@ export default function LineupsPage() {
     try {
       const response = await fetch(`/api/lineups/${lineupToDelete.id}`, {
         method: 'DELETE',
+        headers: {
+          'x-admin-authenticated': 'true', // Add admin authentication header
+        },
+        credentials: 'include', // Include cookies
       })
 
       if (response.ok) {

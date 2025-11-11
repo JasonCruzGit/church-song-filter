@@ -125,11 +125,13 @@ export default function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated, pagination.page, search, statusFilter, categoryFilter])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     // Simple password check - in production, use proper authentication
     if (password === 'admin123' || password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
       localStorage.setItem('admin_authenticated', 'true')
+      // Set cookie for server-side authentication
+      document.cookie = 'admin_authenticated=true; path=/; max-age=86400' // 24 hours
       setAuthenticated(true)
       setError('')
       fetchStats()
@@ -140,6 +142,8 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated')
+    // Remove cookie
+    document.cookie = 'admin_authenticated=; path=/; max-age=0'
     setAuthenticated(false)
     router.push('/')
   }

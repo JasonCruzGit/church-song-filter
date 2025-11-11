@@ -46,7 +46,9 @@ function NewLineupContent() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch('/api/songs?limit=1000')
+      const response = await fetch('/api/songs?limit=1000', {
+        credentials: 'include', // Include cookies
+      })
       const data = await response.json()
       setAvailableSongs(data.songs || [])
       setFilteredSongs(data.songs || [])
@@ -58,7 +60,12 @@ function NewLineupContent() {
   const fetchLineup = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/lineups/${lineupId}`)
+      const response = await fetch(`/api/lineups/${lineupId}`, {
+        headers: {
+          'x-admin-authenticated': 'true', // Add admin authentication header
+        },
+        credentials: 'include', // Include cookies
+      })
       if (response.ok) {
         const lineup = await response.json()
         setFormData({
@@ -124,7 +131,9 @@ function NewLineupContent() {
         method,
         headers: {
           'Content-Type': 'application/json',
+          'x-admin-authenticated': 'true', // Add admin authentication header
         },
+        credentials: 'include', // Include cookies
         body: JSON.stringify({
           name: formData.name,
           description: formData.description || null,

@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { isAdminAuthenticated, getUnauthorizedResponse } from '@/lib/auth'
 
 // GET /api/lineups/[id] - Get a single lineup
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check admin authentication
+  const isAdmin = await isAdminAuthenticated(request)
+  if (!isAdmin) {
+    return getUnauthorizedResponse()
+  }
+
   try {
     const { id } = await params
     const lineup = await prisma.worshipLineup.findUnique({
@@ -41,6 +48,12 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check admin authentication
+  const isAdmin = await isAdminAuthenticated(request)
+  if (!isAdmin) {
+    return getUnauthorizedResponse()
+  }
+
   try {
     const { id } = await params
     const body = await request.json()
@@ -99,6 +112,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check admin authentication
+  const isAdmin = await isAdminAuthenticated(request)
+  if (!isAdmin) {
+    return getUnauthorizedResponse()
+  }
+
   try {
     const { id } = await params
     await prisma.worshipLineup.delete({
