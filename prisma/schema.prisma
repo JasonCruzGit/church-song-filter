@@ -14,14 +14,17 @@ datasource db {
 }
 
 model Song {
-  id          Int      @id @default(autoincrement())
-  title       String
-  artist      String
-  album       String?
-  category    String?
-  lyrics_link String?
-  status      String   @default("Allowed")
-  date_added  DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  title          String
+  artist         String
+  album          String?
+  category       String?
+  lyrics_link    String?
+  musical_key    String?  // e.g., "C", "D", "E", "F", "G", "A", "B", "C#", "Db", etc.
+  tempo_bpm      Int?     // Beats per minute
+  time_signature String?  // e.g., "4/4", "3/4", "6/8", etc.
+  status         String   @default("Allowed")
+  date_added     DateTime @default(now())
 }
 
 model BannedArtist {

@@ -12,6 +12,9 @@ interface Song {
   album: string | null
   category: string | null
   lyrics_link: string | null
+  musical_key: string | null
+  tempo_bpm: number | null
+  time_signature: string | null
   status: string
   date_added: string
 }

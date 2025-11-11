@@ -11,6 +11,9 @@ interface Song {
   album: string | null
   category: string | null
   lyrics_link: string | null
+  musical_key: string | null
+  tempo_bpm: number | null
+  time_signature: string | null
   status: string
   date_added: string
   bannedReason?: string | null
@@ -200,6 +203,9 @@ export default function Home() {
                         Category
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Key / BPM / Time
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -223,6 +229,28 @@ export default function Home() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                           {song.category || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-col gap-1">
+                            {song.musical_key && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+                                Key: {song.musical_key}
+                              </span>
+                            )}
+                            {song.tempo_bpm && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
+                                {song.tempo_bpm} BPM
+                              </span>
+                            )}
+                            {song.time_signature && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200">
+                                {song.time_signature}
+                              </span>
+                            )}
+                            {!song.musical_key && !song.tempo_bpm && !song.time_signature && (
+                              <span className="text-gray-400 dark:text-gray-500">-</span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {song.status === 'Not Allowed' ? (
@@ -294,10 +322,25 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-3 text-sm">
+                  <div className="flex flex-wrap gap-2 text-sm">
                     {song.category && (
                       <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
                         {song.category}
+                      </span>
+                    )}
+                    {song.musical_key && (
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded text-xs font-medium">
+                        Key: {song.musical_key}
+                      </span>
+                    )}
+                    {song.tempo_bpm && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded text-xs font-medium">
+                        {song.tempo_bpm} BPM
+                      </span>
+                    )}
+                    {song.time_signature && (
+                      <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 rounded text-xs font-medium">
+                        {song.time_signature}
                       </span>
                     )}
                     {song.status === 'Allowed' && (

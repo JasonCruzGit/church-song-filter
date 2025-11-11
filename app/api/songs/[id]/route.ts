@@ -34,7 +34,7 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
-    const { title, artist, album, category, lyrics_link } = body
+    const { title, artist, album, category, lyrics_link, musical_key, tempo_bpm, time_signature } = body
 
     if (!title || !artist) {
       return NextResponse.json(
@@ -58,6 +58,9 @@ export async function PUT(
         album: album || null,
         category: category || null,
         lyrics_link: lyrics_link || null,
+        musical_key: musical_key || null,
+        tempo_bpm: tempo_bpm ? parseInt(tempo_bpm.toString()) : null,
+        time_signature: time_signature || null,
         status: isBanned ? 'Not Allowed' : 'Allowed',
       },
     })

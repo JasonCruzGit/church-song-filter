@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Process each song
     const songData = songs.map((song: any) => {
-      const { title, artist, album, category, lyrics_link } = song
+      const { title, artist, album, category, lyrics_link, musical_key, tempo_bpm, time_signature } = song
       
       if (!title || !artist) {
         return null
@@ -37,6 +37,9 @@ export async function POST(request: NextRequest) {
         album: album || null,
         category: category || null,
         lyrics_link: lyrics_link || null,
+        musical_key: musical_key || null,
+        tempo_bpm: tempo_bpm ? parseInt(tempo_bpm.toString()) : null,
+        time_signature: time_signature || null,
         status: isBanned ? 'Not Allowed' : 'Allowed',
       }
     }).filter((song): song is NonNullable<typeof song> => song !== null)

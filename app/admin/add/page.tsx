@@ -13,6 +13,9 @@ interface Song {
   album: string | null
   category: string | null
   lyrics_link: string | null
+  musical_key: string | null
+  tempo_bpm: number | null
+  time_signature: string | null
   status: string
 }
 
@@ -31,6 +34,9 @@ function AddSongContent() {
     album: '',
     category: '',
     lyrics_link: '',
+    musical_key: '',
+    tempo_bpm: '',
+    time_signature: '',
   })
 
   useEffect(() => {
@@ -58,6 +64,9 @@ function AddSongContent() {
           album: song.album || '',
           category: song.category || '',
           lyrics_link: song.lyrics_link || '',
+          musical_key: song.musical_key || '',
+          tempo_bpm: song.tempo_bpm?.toString() || '',
+          time_signature: song.time_signature || '',
         })
       }
     } catch (error) {
@@ -86,6 +95,9 @@ function AddSongContent() {
           album: formData.album || null,
           category: formData.category || null,
           lyrics_link: formData.lyrics_link || null,
+          musical_key: formData.musical_key || null,
+          tempo_bpm: formData.tempo_bpm ? parseInt(formData.tempo_bpm) : null,
+          time_signature: formData.time_signature || null,
         }),
       })
 
@@ -233,6 +245,49 @@ function AddSongContent() {
                 placeholder="https://..."
                 className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Musical Key
+                </label>
+                <input
+                  type="text"
+                  value={formData.musical_key}
+                  onChange={(e) => setFormData({ ...formData, musical_key: e.target.value })}
+                  placeholder="e.g., C, D, E, F#, Gb"
+                  className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Tempo (BPM)
+                </label>
+                <input
+                  type="number"
+                  value={formData.tempo_bpm}
+                  onChange={(e) => setFormData({ ...formData, tempo_bpm: e.target.value })}
+                  placeholder="e.g., 120"
+                  min="1"
+                  max="300"
+                  className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Time Signature
+                </label>
+                <input
+                  type="text"
+                  value={formData.time_signature}
+                  onChange={(e) => setFormData({ ...formData, time_signature: e.target.value })}
+                  placeholder="e.g., 4/4, 3/4, 6/8"
+                  className="w-full px-4 py-2.5 text-base sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">

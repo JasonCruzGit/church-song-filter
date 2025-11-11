@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, artist, album, category, lyrics_link } = body
+    const { title, artist, album, category, lyrics_link, musical_key, tempo_bpm, time_signature } = body
 
     if (!title || !artist) {
       return NextResponse.json(
@@ -101,6 +101,9 @@ export async function POST(request: NextRequest) {
         album: album || null,
         category: category || null,
         lyrics_link: lyrics_link || null,
+        musical_key: musical_key || null,
+        tempo_bpm: tempo_bpm ? parseInt(tempo_bpm.toString()) : null,
+        time_signature: time_signature || null,
         status: isBanned ? 'Not Allowed' : 'Allowed',
       },
     })
