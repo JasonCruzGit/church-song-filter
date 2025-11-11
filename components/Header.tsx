@@ -36,15 +36,12 @@ export default function Header({
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4">
           {/* Logo and Title Section */}
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/20 rounded-full blur-sm group-hover:blur-md transition-all duration-300"></div>
-              <div className="relative bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full p-2 border-2 border-white/30 dark:border-white/20 group-hover:border-white/50 transition-all duration-300">
-                <img 
-                  src="/logo.png" 
-                  alt="Living Word Worship Team Logo" 
-                  className="h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover ring-2 ring-white/20"
-                />
-              </div>
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full p-2 border-2 border-white/30 dark:border-white/20 group-hover:border-white/50 transition-all duration-300">
+              <img 
+                src="/logo.png" 
+                alt="Living Word Worship Team Logo" 
+                className="h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover ring-2 ring-white/20"
+              />
             </div>
             <div className="flex flex-col">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300">
