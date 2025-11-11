@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import ThemeToggle from '@/components/ThemeToggle'
 import Link from 'next/link'
 import ConfirmModal from '@/components/ConfirmModal'
@@ -229,7 +230,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header 
         title="Admin Dashboard"
         subtitle="Living Word Worship Team - Worship Music Library"
@@ -238,7 +239,7 @@ export default function AdminDashboard() {
         onLogout={handleLogout}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -590,6 +591,7 @@ export default function AdminDashboard() {
           confirmText="Delete"
         />
       </main>
+      <Footer />
     </div>
   )
 }

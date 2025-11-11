@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import Link from 'next/link'
 import ConfirmModal from '@/components/ConfirmModal'
 
@@ -79,7 +80,7 @@ export default function LineupsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header 
         title="Worship Lineups"
         subtitle="Create and manage worship service lineups"
@@ -95,7 +96,7 @@ export default function LineupsPage() {
         }}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -195,6 +196,7 @@ export default function LineupsPage() {
         message={`Are you sure you want to delete "${lineupToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
       />
+      <Footer />
     </div>
   )
 }

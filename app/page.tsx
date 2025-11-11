@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import Link from 'next/link'
 import YouTubeIcon from '@/components/YouTubeIcon'
 
@@ -100,12 +101,12 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header 
         showAdminLink={true}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         {/* Search and Filter */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-6">
           <form onSubmit={handleSearch} className="space-y-3 sm:space-y-4">
@@ -397,6 +398,7 @@ export default function Home() {
           </>
         )}
       </main>
+      <Footer />
     </div>
   )
 }
