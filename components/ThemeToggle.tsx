@@ -24,12 +24,20 @@ export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
   }
 
   const toggleTheme = () => {
-    if (theme === 'dark') {
-      setTheme('light')
-    } else {
-      setTheme('dark')
-    }
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
   }
+
+  // Sync theme changes to document element
+  useEffect(() => {
+    if (resolvedTheme) {
+      if (resolvedTheme === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+  }, [resolvedTheme])
 
   // Use resolvedTheme to get the actual theme (light/dark) even when theme is 'system'
   const isDark = resolvedTheme === 'dark'
