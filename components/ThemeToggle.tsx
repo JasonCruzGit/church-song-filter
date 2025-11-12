@@ -28,17 +28,6 @@ export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
     setTheme(newTheme)
   }
 
-  // Sync theme changes to document element
-  useEffect(() => {
-    if (resolvedTheme) {
-      if (resolvedTheme === 'dark') {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
-    }
-  }, [resolvedTheme])
-
   // Use resolvedTheme to get the actual theme (light/dark) even when theme is 'system'
   const isDark = resolvedTheme === 'dark'
 
