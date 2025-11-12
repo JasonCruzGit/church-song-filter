@@ -24,11 +24,8 @@ export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
   }
 
   const toggleTheme = () => {
-    if (theme === 'dark') {
-      setTheme('light')
-    } else {
-      setTheme('dark')
-    }
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
   }
 
   // Use resolvedTheme to get the actual theme (light/dark) even when theme is 'system'
